@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'dragCalendarPage.dart';
 
 class MonthCalendarPage extends StatefulWidget {
   @override
@@ -36,6 +37,16 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
           ),
           SizedBox(height: 20),
           Text('Selected Date: ${_selectedDay.toLocal()}'),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DragCalendarPage()),
+              );
+            },
+            child: Text('Drag Calendar Page'),
+          ),
         ],
       ),
     );
