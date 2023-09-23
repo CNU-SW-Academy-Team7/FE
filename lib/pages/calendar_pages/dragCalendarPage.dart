@@ -44,80 +44,77 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
       onPointerDown: _detectTapedItem,
       onPointerMove: _detectTapedItem,
       onPointerUp: _clearSelection,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 50.0), // Add vertical padding
-        child: GridView.builder(
-          key: key,
-          itemCount: 200, // Adjusted for header rows and columns
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 8,
-            childAspectRatio: 3, // Adjusted aspect ratio for height
-            crossAxisSpacing: 0.5,
-            mainAxisSpacing: 0.0,
-          ),
-          itemBuilder: (context, index) {
-            if (index < 8) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.blue,
-                child: Text(
-                  ['', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][index],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-              );
-            } else if (index % 8 == 0) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.blue,
-                child: Text(
-                  [
-                    '10:00AM',
-                    '10:30AM',
-                    '11:00AM',
-                    '11:30AM',
-                    '12:00PM',
-                    '12:30PM',
-                    '1:00PM',
-                    '1:30PM',
-                    '2:00PM',
-                    '2:30PM',
-                    '3:00PM',
-                    '3:30PM',
-                    '4:00PM',
-                    '4:30PM',
-                    '5:00PM',
-                    '5:30PM',
-                    '6:00PM',
-                    '6:30PM',
-                    '7:00PM',
-                    '7:30PM',
-                    '8:00PM',
-                    '8:30PM',
-                    '9:00PM',
-                    '9:30PM'
-                  ][(index ~/ 8) - 1],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 8,
-                  ),
-                ),
-              );
-            } else {
-              return Foo(
-                index: index,
-                child: Container(
-                  color: selectedIndexes.contains(index)
-                      ? Colors.green
-                      : Colors.grey,
-                ),
-              );
-            }
-          },
+      child: GridView.builder(
+        key: key,
+        itemCount: 200, // Adjusted for header rows and columns
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 8,
+          childAspectRatio: 5,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 2.0,
         ),
+        itemBuilder: (context, index) {
+          if (index < 8) {
+            return Container(
+              alignment: Alignment.center,
+              color: Colors.blue,
+              child: Text(
+                ['', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][index],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                ),
+              ),
+            );
+          } else if (index % 8 == 0) {
+            return Container(
+              alignment: Alignment.center,
+              color: Colors.blue,
+              child: Text(
+                [
+                  '10:00AM',
+                  '10:30AM',
+                  '11:00AM',
+                  '11:30AM',
+                  '12:00PM',
+                  '12:30PM',
+                  '1:00PM',
+                  '1:30PM',
+                  '2:00PM',
+                  '2:30PM',
+                  '3:00PM',
+                  '3:30PM',
+                  '4:00PM',
+                  '4:30PM',
+                  '5:00PM',
+                  '5:30PM',
+                  '6:00PM',
+                  '6:30PM',
+                  '7:00PM',
+                  '7:30PM',
+                  '8:00PM',
+                  '8:30PM',
+                  '9:00PM',
+                  '9:30PM'
+                ][(index ~/ 8) - 1],
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                ),
+              ),
+            );
+          } else {
+            return Foo(
+              index: index,
+              child: Container(
+                color: selectedIndexes.contains(index)
+                    ? Colors.green
+                    : Colors.grey,
+              ),
+            );
+          }
+        },
       ),
     );
   }

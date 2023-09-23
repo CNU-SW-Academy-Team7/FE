@@ -6,7 +6,6 @@ import '/pages/calendar_pages/monthCalendarPage.dart';
 import '/widgets/login_page_widgets/loginPageTextField.dart';
 import '/widgets/login_page_widgets/loginPageButton.dart';
 
-
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -91,12 +90,14 @@ class _LoginPageState extends State<LoginPage> {
     // Implement login logic
     print('Email: $email, Password: $password');
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MonthCalendarPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MonthCalendarPage()));
   }
 
   void _signUp() {
     // Navigate to the SignUpPage
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SignUpPage()));
   }
 
   void _loginWithGoogle() {
