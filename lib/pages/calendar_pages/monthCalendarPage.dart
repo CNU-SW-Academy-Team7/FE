@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dragCalendarPage.dart';
+import 'package:intl/intl.dart'; // intl 패키지를 임포트합니다.
 
 class MonthCalendarPage extends StatefulWidget {
   @override
@@ -32,17 +33,18 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
+                // print(DateFormat('yyyy-MM-dd').format(selectedDay)); // 원하는 형식으로 날짜 포맷
               });
             },
           ),
           SizedBox(height: 20),
-          Text('Selected Date: ${_selectedDay.toLocal()}'),
+          Text('Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDay)}'), // 원하는 형식으로 출력
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => DragCalendarPage()),
+                MaterialPageRoute(builder: (context) => DragCalendarPage(selectedDay: _selectedDay)),
               );
             },
             child: Text('Drag Calendar Page'),
