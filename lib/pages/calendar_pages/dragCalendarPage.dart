@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
-
-
 class DragCalendarPage extends StatefulWidget {
   final DateTime selectedDay;
 
-  DragCalendarPage({super.key, required this.selectedDay});
+  DragCalendarPage({Key? key, required this.selectedDay}) : super(key: key);
 
   @override
   _DragCalendarPageState createState() => _DragCalendarPageState();
@@ -27,124 +25,122 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
   final Set<_Foo> _trackTaped = Set<_Foo>();
 
   _detectTapedItem(PointerEvent event) {
-    final RenderBox box =
-        key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
-    final result = BoxHitTestResult();
-    Offset local = box.globalToLocal(event.position);
-    if (box.hitTest(result, position: local)) {
-      for (final hit in result.path) {
-        final target = hit.target;
-        if (target is _Foo && !_trackTaped.contains(target)) {
-          _trackTaped.add(target);
-          _toggleSelection(target.index);
-          // print(selectedIndexes);
+    if (event.position != null) {
+      final RenderBox box =
+          key.currentContext!.findRenderObject() as RenderBox;
+      final result = BoxHitTestResult();
+      Offset local = box.globalToLocal(event.position!);
+      if (box.hitTest(result, position: local)) {
+        for (final hit in result.path) {
+          final target = hit.target;
+          if (target is _Foo && !_trackTaped.contains(target)) {
+            _trackTaped.add(target);
+            _toggleSelection(target.index);
+          }
         }
       }
     }
   }
 
-_toggleSelection(int index) {
-  String time = '';
+  _toggleSelection(int index) {
+    String time = '';
 
-  if (index >= 9 && index <= 15) {
-    time = '10:00:00';
-  } else if (index >= 17 && index <= 23) {
-    time = '10:30:00';
-  } else if (index >= 25 && index <= 31) {
-    time = '11:00:00';
-  } else if (index >= 33 && index <= 39) {
-    time = '11:30:00';
-  } else if (index >= 41 && index <= 47) {
-    time = '12:00:00';
-  } else if (index >= 49 && index <= 55) {
-    time = '12:30:00';
-  } else if (index >= 57 && index <= 63) {
-    time = '13:00:00';
-  } else if (index >= 65 && index <= 71) {
-    time = '13:30:00';
-  } else if (index >= 73 && index <= 79) {
-    time = '14:00:00';
-  } else if (index >= 81 && index <= 87) {
-    time = '14:30:00';
-  } else if (index >= 89 && index <= 95) {
-    time = '15:00:00';
-  } else if (index >= 97 && index <= 103) {
-    time = '15:30:00';
-  } else if (index >= 105 && index <= 111) {
-    time = '16:00:00';
-  } else if (index >= 113 && index <= 119) {
-    time = '16:30:00';
-  } else if (index >= 121 && index <= 127) {
-    time = '17:00:00';
-  } else if (index >= 129 && index <= 135) {
-    time = '17:30:00';
-  } else if (index >= 137 && index <= 143) {
-    time = '18:00:00';
-  } else if (index >= 145 && index <= 151) {
-    time = '18:30:00';
-  } else if (index >= 153 && index <= 159) {
-    time = '19:00:00';
-  } else if (index >= 161 && index <= 167) {
-    time = '19:30:00';
-  } else if (index >= 169 && index <= 175) {
-    time = '20:00:00';
-  }
-
-  String dayOfWeek = '';
-
-  if (index >= 9 && index <= 169) {
-    if (index % 8 == 1) {
-      dayOfWeek = 'SUN';
-    } else if (index % 8 == 2) {
-      dayOfWeek = 'MON';
-    } else if (index % 8 == 3) {
-      dayOfWeek = 'TUE';
-    } else if (index % 8 == 4) {
-      dayOfWeek = 'WED';
-    } else if (index % 8 == 5) {
-      dayOfWeek = 'THU';
-    } else if (index % 8 == 6) {
-      dayOfWeek = 'FRI';
-    } else if (index % 8 == 7) {
-      dayOfWeek = 'SAT';
+    if (index >= 9 && index <= 15) {
+      time = '10:00:00';
+    } else if (index >= 17 && index <= 23) {
+      time = '10:30:00';
+    } else if (index >= 25 && index <= 31) {
+      time = '11:00:00';
+    } else if (index >= 33 && index <= 39) {
+      time = '11:30:00';
+    } else if (index >= 41 && index <= 47) {
+      time = '12:00:00';
+    } else if (index >= 49 && index <= 55) {
+      time = '12:30:00';
+    } else if (index >= 57 && index <= 63) {
+      time = '13:00:00';
+    } else if (index >= 65 && index <= 71) {
+      time = '13:30:00';
+    } else if (index >= 73 && index <= 79) {
+      time = '14:00:00';
+    } else if (index >= 81 && index <= 87) {
+      time = '14:30:00';
+    } else if (index >= 89 && index <= 95) {
+      time = '15:00:00';
+    } else if (index >= 97 && index <= 103) {
+      time = '15:30:00';
+    } else if (index >= 105 && index <= 111) {
+      time = '16:00:00';
+    } else if (index >= 113 && index <= 119) {
+      time = '16:30:00';
+    } else if (index >= 121 && index <= 127) {
+      time = '17:00:00';
+    } else if (index >= 129 && index <= 135) {
+      time = '17:30:00';
+    } else if (index >= 137 && index <= 143) {
+      time = '18:00:00';
+    } else if (index >= 145 && index <= 151) {
+      time = '18:30:00';
+    } else if (index >= 153 && index <= 159) {
+      time = '19:00:00';
+    } else if (index >= 161 && index <= 167) {
+      time = '19:30:00';
+    } else if (index >= 169 && index <= 175) {
+      time = '20:00:00';
     }
 
-    setState(() {
-      if (selectedIndexes.contains(index)) {
-        selectedIndexes.remove(index);
-      } else {
-        selectedIndexes.add(index);
+    String dayOfWeek = '';
+
+    if (index >= 9 && index <= 169) {
+      if (index % 8 == 1) {
+        dayOfWeek = 'SUN';
+      } else if (index % 8 == 2) {
+        dayOfWeek = 'MON';
+      } else if (index % 8 == 3) {
+        dayOfWeek = 'TUE';
+      } else if (index % 8 == 4) {
+        dayOfWeek = 'WED';
+      } else if (index % 8 == 5) {
+        dayOfWeek = 'THU';
+      } else if (index % 8 == 6) {
+        dayOfWeek = 'FRI';
+      } else if (index % 8 == 7) {
+        dayOfWeek = 'SAT';
       }
-    });
 
-    switch (dayOfWeek) {
-      case 'SUN':
-        // print(DateFormat('yyyy-MM-dd').format(widget.selectedDay));
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'MON':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'TUE':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'WED':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'THU':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'FRI':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
-      case 'SAT':
-        print(DateFormat('"yyyy-MM-dd').format(widget.selectedDay)+'-$time"');
-        break;
+      setState(() {
+        if (selectedIndexes.contains(index)) {
+          selectedIndexes.remove(index);
+        } else {
+          selectedIndexes.add(index);
+        }
+      });
+
+      switch (dayOfWeek) {
+        case 'SUN':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'MON':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'TUE':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'WED':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'THU':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'FRI':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+        case 'SAT':
+          print(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          break;
+      }
     }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +149,14 @@ _toggleSelection(int index) {
       onPointerMove: _detectTapedItem,
       onPointerUp: _clearSelection,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 50.0), // Add vertical padding
+        padding: EdgeInsets.symmetric(vertical: 50.0),
         child: GridView.builder(
           key: key,
-          itemCount: 176, // Adjusted for header rows and columns
+          itemCount: 176,
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 8,
-            childAspectRatio: 3, // Adjusted aspect ratio for height
+            childAspectRatio: 3,
             crossAxisSpacing: 0.5,
             mainAxisSpacing: 0.0,
           ),
@@ -173,7 +169,7 @@ _toggleSelection(int index) {
                   ['', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][index],
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 10,
+                    fontSize: 8,
                   ),
                 ),
               );
@@ -203,7 +199,7 @@ _toggleSelection(int index) {
                     '6:30PM',
                     '7:00PM',
                     '7:30PM',
-                    '8:00PM'
+                    '8:00PM',
                   ][(index ~/ 8) - 1],
                   style: TextStyle(
                     color: Colors.white,
@@ -254,4 +250,15 @@ class Foo extends SingleChildRenderObjectWidget {
 class _Foo extends RenderProxyBox {
   int index;
   _Foo(this.index);
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      appBar: AppBar(
+        title: Text('Draggable Calendar'),
+      ),
+      body: DragCalendarPage(selectedDay: DateTime.now()),
+    ),
+  ));
 }
