@@ -10,9 +10,9 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _signUpEmailController = TextEditingController();
   final TextEditingController _signUpPasswordController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _signUpUserNameController =
-  TextEditingController();
+      TextEditingController();
 
   Future<void> _register() async {
     final String apiUrl = 'http://34.64.52.102:8080/signUp';
@@ -61,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('에러'),
-              content: Text('이미 존재하는 사용자입니다. ${errorData["message"]}'),
+              content: Text('이미 존재하는 사용자입니다.'),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
