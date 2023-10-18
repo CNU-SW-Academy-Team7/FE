@@ -36,7 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
         body: jsonEncode(requestBody),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 202) {
         // 회원 가입 성공
         showDialog(
           context: context,

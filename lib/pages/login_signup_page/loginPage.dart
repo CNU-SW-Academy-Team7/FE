@@ -31,12 +31,13 @@ class _LoginPageState extends State<LoginPage> {
         }),
       );
 
-      print("${response.body}");
+      print("response body : ${response.body}");
+      print("response : ${response.statusCode}");
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        String userName = responseData['userName'];
+        int userId = responseData['userId'];
 
-        print('로그인 성공! 사용자 ID: $userName');
+        print('로그인 성공! 사용자 ID: ${userId}');
 
         Navigator.push(
           context,
