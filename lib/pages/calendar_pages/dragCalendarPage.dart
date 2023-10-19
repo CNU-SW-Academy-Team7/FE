@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'resultCalendarPage.dart';
+
 void main() {
   runApp(MaterialApp(
     home: Scaffold(
@@ -31,46 +32,43 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
   final Set<int> selectedIndexes = Set<int>();
   final key = GlobalKey();
   final Set<_Foo> _trackTaped = Set<_Foo>();
-  
-  List<DateTime> arrayList = [];
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//백엔드와 연동하는 부분
+
+  List<String> arrayList = []; // 날짜 및 시간을 문자열로 저장
+
+  // 형식을 "yyyy-MM-dd-HH:mm:ss"로 설정
+  final DateFormat dateFormat = DateFormat('yyyy-MM-dd-HH:mm:ss');
+
   void _connectToBackend() async {
-  final baseUrl = 'http://34.64.52.102:8080';  // 실제 서버 주소로 변경
-  final groupId = 1;
-  final scheduleId = 1;
-  final userId = 1;
-  final url = Uri.parse('${baseUrl}/availableSchedule/${groupId}/${scheduleId}/${userId}');
-  
-  
-  final headers = {
-    'Content-Type': 'application/json',
-  };
+    final baseUrl = 'http://34.64.52.102:8080'; // 실제 서버 주소로 변경
+    final groupId = 1;
+    final scheduleId = 1;
+    final userId = 1;
+    final url = Uri.parse('${baseUrl}/availableSchedule/${groupId}/${scheduleId}/${userId}');
 
-try {
-  final response = await http.post(
-    url,
-    headers: headers,
-    body: jsonEncode({"availableScheduleList": arrayList.map((dateTime) => dateTime.toIso8601String()).toList()}),
-  );
+    final headers = {
+      'Content-Type': 'application/json',
+    };
 
-  if (response.statusCode == 201) {
-    print('요청 성공: ${response.body}');
-  } else {
-    print('요청 실패: ${response.statusCode}');
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({"availableScheduleList": arrayList}),
+      );
+
+      if (response.statusCode == 201) {
+        print('요청 성공: ${response.body}');
+      } else {
+        print('요청 실패: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('에러 발생: $error');
+    }
   }
-} catch (error) {
-  print('에러 발생: $error');
-}
-  }
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
   _detectTapedItem(PointerEvent event) {
     if (event.position != null) {
-      final RenderBox box =
-          key.currentContext!.findRenderObject() as RenderBox;
+      final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
       final result = BoxHitTestResult();
       Offset local = box.globalToLocal(event.position!);
       if (box.hitTest(result, position: local)) {
@@ -84,6 +82,7 @@ try {
       }
     }
   }
+
 
   _toggleSelection(int index) {
     String time = '';
@@ -163,26 +162,26 @@ try {
 
       switch (dayOfWeek) {
         case 'SUN':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
-          print({'"availableScheduleList": '+'$arrayList'});
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
+          print({"availableScheduleList": arrayList});
           break;
         case 'MON':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'TUE':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'WED':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'THU':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'FRI':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'SAT':
-          arrayList.add(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time"));
+          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
       }
     }
