@@ -29,7 +29,7 @@ class _ResultCalendarPageState extends State<ResultCalendarPage> {
 
   // 백엔드와 연동하는 부분
   Future<void> fetchAvailableSchedules() async {
-    final apiUrl = '34.64.52.102:8080/availableScheduleList/1/1';
+    final apiUrl = 'http://34.64.52.102:8080/availableScheduleList/1/1';
 
     final response = await http.get(Uri.parse(apiUrl));
 

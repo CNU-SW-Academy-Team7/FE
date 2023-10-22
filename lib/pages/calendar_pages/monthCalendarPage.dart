@@ -60,16 +60,15 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                   ],
                 ),
                 TextField(
-                  decoration: InputDecoration(
-                    labelText: '스케쥴',
-                    hintText: '스케쥴을 입력하세요',
-                  ),
-                  onChanged: (value){
-                    setState(() {
-                      scheduleName = value;
-                    });
-                  }
-                ),
+                    decoration: InputDecoration(
+                      labelText: '스케쥴',
+                      hintText: '스케쥴을 입력하세요',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        scheduleName = value;
+                      });
+                    }),
               ],
             ),
           ),
@@ -115,8 +114,9 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => DragCalendarPage(selectedDay: selectedDate)),
-                    )
+                          builder: (context) =>
+                              DragCalendarPage(selectedDay: selectedDate)),
+                    );
                   } else {
                     // 요청이 실패한 경우
                     print('요청 실패');
@@ -126,7 +126,6 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                   // 예외 처리
                   print('오류 발생 : $error');
                 }
-
               },
             ),
           ],
