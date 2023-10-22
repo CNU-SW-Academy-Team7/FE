@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'resultCalendarPage.dart';
+
 void main() {
   runApp(MaterialApp(
     home: Scaffold(
@@ -31,46 +32,44 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
   final Set<int> selectedIndexes = Set<int>();
   final key = GlobalKey();
   final Set<_Foo> _trackTaped = Set<_Foo>();
-  
-  List<String> arrayList = [];
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//백엔드와 연동하는 부분
+
+  List<String> arrayList = []; // 날짜 및 시간을 문자열로 저장
+
+  // 형식을 "yyyy-MM-dd-HH:mm:ss"로 설정
+  final DateFormat dateFormat = DateFormat('yyyy-MM-dd-HH:mm:ss');
+
   void _connectToBackend() async {
-  final baseUrl = 'http://34.64.52.102:8080';  // 실제 서버 주소로 변경
-  final groupId = 'yourGroupId';
-  final scheduleId = 'yourScheduleId';
-  final userId = 'yourUserId';
-  final url = Uri.parse('$baseUrl/availableSchedule/$groupId/$scheduleId/$userId');
-  
+    final baseUrl = 'http://34.64.52.102:8080'; // 실제 서버 주소로 변경
+    final groupId = 1;
+    final scheduleId = 1;
+    final userId = 1;
+    final url = Uri.parse(
+        '${baseUrl}/availableSchedule/${groupId}/${scheduleId}/${userId}');
 
-  final headers = {
-    'Content-Type': 'application/json',
-  };
+    final headers = {
+      'Content-Type': 'application/json',
+    };
 
-  try {
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(arrayList),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({"availableScheduleList": arrayList}),
+      );
 
-    if (response.statusCode == 200) {
-      print('요청 성공: ${response.body}');
-    } else {
-      print('요청 실패: ${response.statusCode}');
+      if (response.statusCode == 201) {
+        print('요청 성공: ${response.body}');
+      } else {
+        print('요청 실패: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('에러 발생: $error');
     }
-  } catch (error) {
-    print('에러 발생: $error');
   }
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
   _detectTapedItem(PointerEvent event) {
     if (event.position != null) {
-      final RenderBox box =
-          key.currentContext!.findRenderObject() as RenderBox;
+      final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
       final result = BoxHitTestResult();
       Offset local = box.globalToLocal(event.position!);
       if (box.hitTest(result, position: local)) {
@@ -132,8 +131,6 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
       time = '20:00:00';
     }
 
-    
-    
     String dayOfWeek = '';
 
     if (index >= 9 && index <= 169) {
@@ -163,25 +160,33 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
 
       switch (dayOfWeek) {
         case 'SUN':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
+          print({"availableScheduleList": arrayList});
           break;
         case 'MON':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'TUE':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'WED':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'THU':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'FRI':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
         case 'SAT':
-          arrayList.add(DateFormat('yyyy-MM-dd').format(widget.selectedDay) + '-$time"');
+          arrayList.add(dateFormat.format(DateTime.parse(
+              "${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
           break;
       }
     }
@@ -192,96 +197,108 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
     return Column(
       children: [
         Container(
-          
-        child: Listener(
-          onPointerDown: (PointerDownEvent event) => _detectTapedItem(event),
-          onPointerMove: (PointerMoveEvent event) => _detectTapedItem(event),
-          onPointerUp: (PointerUpEvent event) => _clearSelection(event),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 50.0),
-            child: GridView.builder(
-              key: key,
-              shrinkWrap: true, // 추가: GridView를 부모 위젯의 크기에 맞게 축소
-              itemCount: 176,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 8,
-                childAspectRatio: 3,
-                crossAxisSpacing: 0.5,
-                mainAxisSpacing: 0.0,
+          child: Listener(
+            onPointerDown: (PointerDownEvent event) => _detectTapedItem(event),
+            onPointerMove: (PointerMoveEvent event) => _detectTapedItem(event),
+            onPointerUp: (PointerUpEvent event) => _clearSelection(event),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 50.0),
+              child: GridView.builder(
+                key: key,
+                shrinkWrap: true, // 추가: GridView를 부모 위젯의 크기에 맞게 축소
+                itemCount: 176,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 8,
+                  childAspectRatio: 3,
+                  crossAxisSpacing: 0.5,
+                  mainAxisSpacing: 0.0,
+                ),
+                itemBuilder: (context, index) {
+                  if (index < 8) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: Colors.blue,
+                      child: Text(
+                        [
+                          '',
+                          'SUN',
+                          'MON',
+                          'TUE',
+                          'WED',
+                          'THU',
+                          'FRI',
+                          'SAT'
+                        ][index],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                      ),
+                    );
+                  } else if (index % 8 == 0) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: Colors.blue,
+                      child: Text(
+                        [
+                          '10:00AM',
+                          '10:30AM',
+                          '11:00AM',
+                          '11:30AM',
+                          '12:00PM',
+                          '12:30PM',
+                          '1:00PM',
+                          '1:30PM',
+                          '2:00PM',
+                          '2:30PM',
+                          '3:00PM',
+                          '3:30PM',
+                          '4:00PM',
+                          '4:30PM',
+                          '5:00PM',
+                          '5:30PM',
+                          '6:00PM',
+                          '6:30PM',
+                          '7:00PM',
+                          '7:30PM',
+                          '8:00PM',
+                        ][(index ~/ 8) - 1],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Foo(
+                      index: index,
+                      child: Container(
+                        color: selectedIndexes.contains(index)
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                    );
+                  }
+                },
               ),
-              itemBuilder: (context, index) {
-                if (index < 8) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.blue,
-                    child: Text(
-                      ['', 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][index],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                      ),
-                    ),
-                  );
-                } else if (index % 8 == 0) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.blue,
-                    child: Text(
-                      [
-                        '10:00AM',
-                        '10:30AM',
-                        '11:00AM',
-                        '11:30AM',
-                        '12:00PM',
-                        '12:30PM',
-                        '1:00PM',
-                        '1:30PM',
-                        '2:00PM',
-                        '2:30PM',
-                        '3:00PM',
-                        '3:30PM',
-                        '4:00PM',
-                        '4:30PM',
-                        '5:00PM',
-                        '5:30PM',
-                        '6:00PM',
-                        '6:30PM',
-                        '7:00PM',
-                        '7:30PM',
-                        '8:00PM',
-                      ][(index ~/ 8) - 1],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                      ),
-                    ),
-                  );
-                } else {
-                  return Foo(
-                    index: index,
-                    child: Container(
-                      color: selectedIndexes.contains(index)
-                          ? Colors.green
-                          : Colors.grey,
-                    ),
-                  );
-                }
-              },
             ),
           ),
         ),
-        ),
         Container(
-          
-        child: ElevatedButton(
-          onPressed: () {
-            _connectToBackend(); //백엔드 연동 함수 호출
-            Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ResultCalendarPage(selectedDay: widget.selectedDay,))); //selectedDay 수정해야함
-          },
-          child: Text('Next'),
-        ),
+          child: ElevatedButton(
+            onPressed: () {
+              _connectToBackend(); //백엔드 연동 함수 호출
+              // print({"availableScheduleList": arrayList});
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ResultCalendarPage(
+                            selectedDay: widget.selectedDay,
+                          ))); //selectedDay 수정해야함
+            },
+            child: Text('Next'),
+          ),
         ),
       ],
     );

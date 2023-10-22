@@ -31,12 +31,13 @@ class _LoginPageState extends State<LoginPage> {
         }),
       );
 
-      print("${response.body}");
+      print("response body : ${response.body}");
+      print("response : ${response.statusCode}");
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        String userName = responseData['userName'];
+        int userId = responseData['userId'];
 
-        print('로그인 성공! 사용자 ID: $userName');
+        print('로그인 성공! 사용자 ID: ${userId}');
 
         Navigator.push(
           context,
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login Page'),
+        title: Text('로그인'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -97,12 +98,12 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             LoginPageTextField(
-              labelText: 'Email',
+              labelText: '이메일',
               controller: _emailController,
             ),
             SizedBox(height: 16.0),
             LoginPageTextField(
-              labelText: 'Password',
+              labelText: '비밀번호',
               controller: _passwordController,
               obscureText: true,
             ),
@@ -111,12 +112,12 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 LoginButton(
-                  text: 'Login',
+                  text: '로그인',
                   onPressed: _login,
                 ),
                 SizedBox(width: 10.0),
                 LoginButton(
-                  text: 'SIGN UP',
+                  text: '회원가입',
                   onPressed: _signUp,
                 ),
               ],
