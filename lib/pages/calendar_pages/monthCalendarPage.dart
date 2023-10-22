@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'dragCalendarPage.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MonthCalendarPage extends StatefulWidget {
   @override
@@ -13,6 +17,28 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
   DateTime _focusedDay = DateTime.now();
 
   Future<void> _showDateSelectionDialog(DateTime selectedDate) async {
+    String groupId = '1';
+    String scheduleId = '1';
+
+    final apiUrl =
+        Uri.parse('http://34.64.52.102:8080/createGroupSchedule/${groupId}');
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'scheduleId': scheduleId,
+          'scheduleDate': selectedDate,
+        }),
+      );
+      print("selecctedDate : ${selectedDate}");
+      print("response body : ${response.body}");
+      print("response : ${response.statusCode}");
+    } catch (error) {
+      print('Month Calendar Page 오류발생 : ${error}');
+    }
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -22,7 +48,8 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Making schedules ${selectedDate.day} to ${selectedDate.add(Duration(days: 6)).day} ???'),
+              Text(
+                  'Making schedules ${selectedDate.day} to ${selectedDate.add(Duration(days: 6)).day} ???'),
               SizedBox(height: 20),
               Text('Select a Group:'),
               DropdownButton<String>(
@@ -58,13 +85,16 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                 }
 
                 // Close the dialog and do something with the selected dates and group.
-                Navigator.of(context).pop({'dates': selectedWeekDates, 'group': selectedGroup});
+                Navigator.of(context)
+                    .pop({'dates': selectedWeekDates, 'group': selectedGroup});
                 print(selectedWeekDates);
                 print(selectedGroup);
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DragCalendarPage(selectedDay: _selectedDay)),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DragCalendarPage(selectedDay: _selectedDay)),
                 );
               },
             ),
@@ -78,36 +108,35 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
   List<CalendarEvent> calendarEvents = [
     CalendarEvent(
       date: DateTime(2023, 10, 1),
-      groupName: 'Group A',
-      scheduleName: 'Event 1',
+      groupName: 'SW아카데미',
+      scheduleName: '전체 미팅',
     ),
     CalendarEvent(
       date: DateTime(2023, 10, 2),
-      groupName: 'Group B',
-      scheduleName: 'Event 2',
+      groupName: 'FE',
+      scheduleName: '프론트 미팅',
     ),
     // Add more events as needed
   ];
 
   // Define group names
-  List<String> groupNames = ['Group A', 'Group B'];
+  List<String> groupNames = ['SW아카데미', 'FE'];
   final List<Group> groups = [
     Group('SW아카데미', []),
     Group('FE', []),
-    ];
+  ];
 
   // Initialize the selected group with the first group in the list
-  String selectedGroup = 'Group A'; // 초기 선택값 설정
+  String selectedGroup = 'SW아카데미'; // 초기 선택값 설정
 
   @override
   Widget build(BuildContext context) {
-
     final User user = User('박용범', Icons.person);
 
     // groups를 필드 선언 시에 초기화합니다.
- 
 
-    groups[0].setItems([user.name + '(나)', '김혜진', '김대민', '김솔', '이유현', '이태홍', '유정균', '서재환']);
+    groups[0].setItems(
+        [user.name + '(나)', '김혜진', '김대민', '김솔', '이유현', '이태홍', '유정균', '서재환']);
     groups[1].setItems([user.name + '(나)', '이유현', '이태홍', '유정균']);
 
     return Scaffold(
@@ -162,32 +191,35 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
             },
           ),
           SizedBox(height: 20),
-          Text('Selected Date: ${_selectedDay.toLocal()}'),
+          Text('현재 일정'),
           SizedBox(height: 20),
 
           // Create a table to display calendar events
-          DataTable(
-            columns: [
-              DataColumn(label: Text('Date')),
-              DataColumn(label: Text('Group Name')),
-              DataColumn(label: Text('Schedule Name')),
-            ],
-            rows: calendarEvents
-                .map(
-                  (event) => DataRow(
-                    cells: [
-                      DataCell(Text(event.date.toString())),
-                      DataCell(Text(event.groupName)),
-                      DataCell(Text(event.scheduleName)),
-                    ],
-                  ),
-                )
-                .toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text('날짜')),
+                DataColumn(label: Text('그룹')),
+                DataColumn(label: Text('스케쥴')),
+              ],
+              rows: calendarEvents
+                  .map(
+                    (event) => DataRow(
+                      cells: [
+                        DataCell(Text(
+                            DateFormat('MM월 dd일\nhh시 mm분').format(event.date))),
+                        DataCell(Text(event.groupName)),
+                        DataCell(Text(event.scheduleName)),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
           SizedBox(height: 20),
 
           // DropdownButton for selecting a group
-
         ],
       ),
     );
@@ -223,5 +255,4 @@ class Group {
   void setItems(List<String> newItems) {
     items = newItems;
   }
-
 }
