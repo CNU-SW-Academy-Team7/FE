@@ -12,6 +12,8 @@ class MonthCalendarPage extends StatefulWidget {
 }
 
 class _MonthCalendarPageState extends State<MonthCalendarPage> {
+  final TextEditingController _scheduleController = TextEditingController();
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
@@ -19,6 +21,7 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
   Future<void> _showDateSelectionDialog(DateTime selectedDate) async {
     String groupId = '1';
     String scheduleId = '1';
+    String scheduleName = '';
 
     return showDialog<void>(
       context: context,
@@ -26,39 +29,49 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('선택된 날짜'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                  '${selectedDate.year}${selectedDate.month}월 ${selectedDate.day}일 부터 ${selectedDate.month}월 ${selectedDate.add(Duration(days: 6)).day}일 일정 생성'),
-              SizedBox(height: 20),
-              Row(
-                children: [
-                  SizedBox(width: 10),
-                  Text('그룹 선택'),
-                  SizedBox(width: 60),
-                  DropdownButton<String>(
-                    value: selectedGroup,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedGroup = newValue!;
-                      });
-                    },
-                    items: groupNames
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  '${selectedDate.month}월 ${selectedDate.day}일 ~ ${selectedDate.month}월 ${selectedDate.add(Duration(days: 6)).day}일 일정 생성',
+                ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Text('그룹 선택'),
+                    SizedBox(width: 60),
+                    DropdownButton<String>(
+                      value: selectedGroup,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedGroup = newValue!;
+                        });
+                      },
+                      items: groupNames
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: '스케쥴',
+                    hintText: '스케쥴을 입력하세요',
                   ),
-                ],
-              ),
-              // TextField(
-              //   labelText: "스케쥴 이름",
-              //   controller:
-              // )
-            ],
+                  onChanged: (value){
+                    setState(() {
+                      scheduleName = value;
+                    });
+                  }
+                ),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -89,7 +102,7 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                     apiUrl,
                     headers: {'Content-Type': 'application/json'},
                     body: json.encode({
-                      'scheduleId': scheduleId,
+                      'scheduleName': scheduleName,
                       'scheduleDate':
                           "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}",
                     }),
@@ -99,6 +112,11 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                     // 요청이 성공하고 서버에서 200 OK 응답을 받은 경우
                     print('요청 성공');
                     print('응답: ${response.body}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DragCalendarPage(selectedDay: selectedDate)),
+                    )
                   } else {
                     // 요청이 실패한 경우
                     print('요청 실패');
@@ -108,6 +126,7 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                   // 예외 처리
                   print('오류 발생 : $error');
                 }
+
               },
             ),
           ],
@@ -153,7 +172,7 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Month Calendar Page'),
+        title: Text('월별 일정'),
       ),
       drawer: Drawer(
         child: ListView(
