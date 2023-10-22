@@ -20,82 +20,94 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
     String groupId = '1';
     String scheduleId = '1';
 
-    final apiUrl =
-        Uri.parse('http://34.64.52.102:8080/createGroupSchedule/${groupId}');
-
-    try {
-      final response = await http.post(
-        apiUrl,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'scheduleId': scheduleId,
-          'scheduleDate': selectedDate,
-        }),
-      );
-      print("selecctedDate : ${selectedDate}");
-      print("response body : ${response.body}");
-      print("response : ${response.statusCode}");
-    } catch (error) {
-      print('Month Calendar Page 오류발생 : ${error}');
-    }
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Selected Date'),
+          title: Text('선택된 날짜'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                  'Making schedules ${selectedDate.day} to ${selectedDate.add(Duration(days: 6)).day} ???'),
+                  '${selectedDate.year}${selectedDate.month}월 ${selectedDate.day}일 부터 ${selectedDate.month}월 ${selectedDate.add(Duration(days: 6)).day}일 일정 생성'),
               SizedBox(height: 20),
-              Text('Select a Group:'),
-              DropdownButton<String>(
-                value: selectedGroup,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedGroup = newValue!;
-                  });
-                },
-                items: groupNames.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              Row(
+                children: [
+                  SizedBox(width: 10),
+                  Text('그룹 선택'),
+                  SizedBox(width: 60),
+                  DropdownButton<String>(
+                    value: selectedGroup,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedGroup = newValue!;
+                      });
+                    },
+                    items: groupNames
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
+              // TextField(
+              //   labelText: "스케쥴 이름",
+              //   controller:
+              // )
             ],
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Nope'),
+              child: Text('아니요'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Sure'),
-              onPressed: () {
+              child: Text('생성'),
+              onPressed: () async {
                 // Generate a list of dates from selectedDate to selectedDate + 6 days.
                 List<DateTime> selectedWeekDates = [];
                 for (int i = 0; i < 7; i++) {
                   selectedWeekDates.add(selectedDate.add(Duration(days: i)));
                 }
+                print(selectedWeekDates);
 
                 // Close the dialog and do something with the selected dates and group.
                 Navigator.of(context)
                     .pop({'dates': selectedWeekDates, 'group': selectedGroup});
-                print(selectedWeekDates);
-                print(selectedGroup);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DragCalendarPage(selectedDay: _selectedDay)),
-                );
+                final apiUrl = Uri.parse(
+                    'http://34.64.52.102:8080/createGroupSchedule/${groupId}');
+
+                try {
+                  final response = await http.post(
+                    apiUrl,
+                    headers: {'Content-Type': 'application/json'},
+                    body: json.encode({
+                      'scheduleId': scheduleId,
+                      'scheduleDate':
+                          "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}",
+                    }),
+                  );
+
+                  if (response.statusCode == 200) {
+                    // 요청이 성공하고 서버에서 200 OK 응답을 받은 경우
+                    print('요청 성공');
+                    print('응답: ${response.body}');
+                  } else {
+                    // 요청이 실패한 경우
+                    print('요청 실패');
+                    print('응답 코드: ${response.statusCode}');
+                  }
+                } catch (error) {
+                  // 예외 처리
+                  print('오류 발생 : $error');
+                }
               },
             ),
           ],
