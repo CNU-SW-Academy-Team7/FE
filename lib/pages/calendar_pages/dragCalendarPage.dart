@@ -160,30 +160,7 @@ class _DragCalendarPageState extends State<DragCalendarPage> {
         }
       });
 
-      switch (dayOfWeek) {
-        case 'SUN':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          print({"availableScheduleList": arrayList});
-          break;
-        case 'MON':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-        case 'TUE':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-        case 'WED':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-        case 'THU':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-        case 'FRI':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-        case 'SAT':
-          arrayList.add(dateFormat.format(DateTime.parse("${DateFormat('yyyy-MM-dd').format(widget.selectedDay)} $time")));
-          break;
-      }
+      
     }
   }
 

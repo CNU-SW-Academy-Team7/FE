@@ -176,7 +176,8 @@ class _MonthCalendarPageState extends State<MonthCalendarPage> {
                 .map(
                   (event) => DataRow(
                     cells: [
-                      DataCell(Text(event.date.toString())),
+                      DataCell(Text(event.date.year.toString() + "-" + event.date.month.toString() +
+                       "-" + event.date.day.toString())),
                       DataCell(Text(event.groupName)),
                       DataCell(Text(event.scheduleName)),
                     ],
